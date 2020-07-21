@@ -138,13 +138,16 @@
 	. = ..()
 	selected = schematics[1]	//Reset the selection.
 
-/*/datum/rcd_schematic/con_airlock/register_assets()
+/*
+
+/datum/rcd_schematic/con_airlock/register_assets()
 	for(var/datum/selection_schematic/airlock_schematic/C in schematics)
 		C.register_icon()
 
 /datum/rcd_schematic/con_airlock/send_assets(var/client/client)
 	for(var/datum/selection_schematic/airlock_schematic/C in schematics)
 		C.send_icon(client)
+
 */
 
 /datum/rcd_schematic/con_airlock/get_HTML(var/obj/machinery/door/airlock/D)

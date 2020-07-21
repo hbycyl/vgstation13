@@ -19,7 +19,9 @@
 	origin_tech         = Tc_ENGINEERING + "=4;" + Tc_MATERIALS + "=2"
 
 	//list of schematics, in definitions of RCD subtypes, no organization is needed, in New() these get organized.
+	//don't let this lie to you, really schematics is a list of lists, see below
 	var/list/schematics = list(/datum/rcd_schematic/test)
+	
 	// Make sparks. LOTS OF SPARKS.
 	var/sparky          = TRUE
 
@@ -55,8 +57,9 @@
 		var/datum/rcd_schematic/C = new path(src)
 		if(!schematics[C.category])
 			schematics[C.category] = list()
-
+			//see, list of lists, fuckboi, y u lie
 		schematics[C.category] += C
+
 
 /obj/item/device/rcd/Destroy()
 	for(var/cat in schematics)
@@ -71,6 +74,7 @@
 	data         = null
 
 	. = ..()
+
 
 /obj/item/device/rcd/dropped(var/mob/living/dropped_by)
 	..()
@@ -95,20 +99,21 @@
 		dat += "<b>[cat]:</b><ul style='list-style-type:disc'>"
 		var/list/L = schematics[cat]
 		for(var/datum/rcd_schematic/C in L)
-			dat += C.schematic_list_line(interface)
+			dat += C.schematic_list_line(interface) //this makes some html lmao
 
-		dat += "</ul>"
+		dat += "</ul>" //lmao
 
 	interface.updateLayout(dat)
 
 	if(selected)
 		update_options_menu()
 		interface.updateContent("selectedname", selected.name)
-
-	rebuild_favs()
+ 
+	rebuild_favs() // yeah why not call it
 
 /obj/item/device/rcd/proc/rebuild_favs()
 	var/dat = "<b>Favorites:</b> <span title='You can cycle through these with ctrl+mousewheel outside of the UI.'>(?)</span><ul style='list-style-type:disc'>"
+	//holy shit, is anyone rcd robust enough to know that?
 	for (var/datum/rcd_schematic/C in favorites)
 		dat += C.schematic_list_line(interface, TRUE)
 
@@ -130,14 +135,15 @@
 		switch (href_list["act"])
 			if ("select")
 				try_switch(usr, C)
-
+			
+			// these two originally were rebuild_ui(), why?
 			if ("fav")
 				favorites |= C
-				rebuild_ui()
+				rebuild_favs()
 
 			if ("defav")
 				favorites -= C
-				rebuild_ui()
+				rebuild_favs()
 
 			if ("favorder")
 				var/index = favorites.Find(C)
@@ -224,6 +230,7 @@
 	if (sparky && next_spark < world.time)
 		spark(src, 5, FALSE)
 		next_spark = world.time + 0.5 SECONDS
+
 
 /obj/item/device/rcd/proc/get_energy(var/mob/user)
 	return INFINITY
